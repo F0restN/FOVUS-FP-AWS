@@ -1,8 +1,15 @@
 ## FOVUS PROJECT
 
+(Finished in 3 days, received on Friday and 2 weekend days passed)
+
 <img src="https://p.ipic.vip/udy7hh.png" alt="image-20240408224638612" style="zoom: 200%;" />
 
-Deployed by CDK
+For setting up, you only need to set up AWS infrastructure, web portal deployed on AWS
+
+1. Navigate to https://github.com/F0restN/FOVUS-AWS-SETUP and download it, which is the AWS infrastructure created by AWS-CDK
+2. Config AWS environemnt if you didnt do that before
+3. Run `cdk deploy`
+4. Boom! finished, go to http://fovus-drake-client-production.s3-website.us-east-2.amazonaws.com/ and check it out.
 
 
 
@@ -30,7 +37,7 @@ docClient = DynamoDBDocumentClient.from(dbClient);
 
 ### Hosted in S3
 
-URL: 
+URL: http://fovus-drake-client-production.s3-website.us-east-2.amazonaws.com/
 
 ### Use Flowbite TailwindCSS and ReactJS for frontend and it is responsive
 

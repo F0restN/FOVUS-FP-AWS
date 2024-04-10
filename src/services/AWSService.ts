@@ -10,17 +10,6 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { PutCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { nanoid } from 'nanoid';
 import { BUCKET_NAME, CURRENT_REGION, TABLE_NAME } from '../env';
-import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import {
-  CognitoIdentityClient,
-  ListIdentityPoolsCommand,
-} from '@aws-sdk/client-cognito-identity';
-
-// TODO: Should I find a way to load the region from the config file?, Maybe also required to upgrade webpack
-// https://stackoverflow.com/questions/64557638/how-to-polyfill-node-core-modules-in-webpack-5
-//  import { loadConfig } from "@smithy/node-config-provider";
-//  import { NODE_REGION_CONFIG_FILE_OPTIONS, NODE_REGION_CONFIG_OPTIONS } from "@smithy/config-resolver";
-//  const currentRegion = await loadConfig(NODE_REGION_CONFIG_OPTIONS, NODE_REGION_CONFIG_FILE_OPTIONS);
 
 let client: S3Client;
 let dbClient: DynamoDBClient;

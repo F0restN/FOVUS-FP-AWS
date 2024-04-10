@@ -45,7 +45,6 @@ function auth(token: string | number | readonly string[] | undefined) {
         }),
       });
       docClient = DynamoDBDocumentClient.from(dbClient);
-      localStorage.setItem('validate', 'true');
     } else {
       return false;
     }

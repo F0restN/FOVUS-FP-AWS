@@ -1,46 +1,157 @@
-# Getting Started with Create React App
+## FOVUS PROJECT
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img src="https://p.ipic.vip/udy7hh.png" alt="image-20240408224638612" style="zoom: 200%;" />
 
-## Available Scripts
+Deployed by CDK
 
-In the project directory, you can run:
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Bonus Feature
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Used AWS Cognito as API-Gateway Authorizer
 
-### `npm test`
+```typescript
+client = new S3Client({
+  region: CURRENT_REGION,
+  credentials: fromCognitoIdentityPool({
+    clientConfig: { region: CURRENT_REGION },
+    identityPoolId: identityPoolId,
+  }),
+});
+dbClient = new DynamoDBClient({
+  region: CURRENT_REGION,
+  credentials: fromCognitoIdentityPool({
+    clientConfig: { region: CURRENT_REGION },
+    identityPoolId: identityPoolId,
+  }),
+});
+docClient = DynamoDBDocumentClient.from(dbClient);
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Hosted in S3
 
-### `npm run build`
+URL: 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Use Flowbite TailwindCSS and ReactJS for frontend and it is responsive
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<img src="https://p.ipic.vip/n8vc26.png" alt="image-20240410015033974" style="zoom:50%;" />
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<img src="https://p.ipic.vip/8ttz6u.png" alt="image-20240410014953852" style="zoom:50%;" />
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Error Handle
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Invalid token in login page
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+(Btw, the correct is: dXMtZWFzdC0yOjllYzgxNTQyLWJmZDgtNDFhZS04MjI5LWNmNTUyODlhNWFjNg==)
 
-## Learn More
+<img src="https://p.ipic.vip/t0mmde.png" alt="image-20240410015315323" style="zoom:50%;" />
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+
+In file upload part, notification will be sent for acknowledgement purpose
+
+File type error
+
+<img src="https://p.ipic.vip/yxm08c.png" alt="image-20240410015418502" style="zoom:50%;" />
+
+File or input text empty error
+
+<img src="https://p.ipic.vip/q33j2o.png" alt="image-20240410015536816" style="zoom:50%;" />
+
+Upload to S3 -> Insert into DynamoDB are order in sequence. Previous workflow rejected will lead to the end of all workflow which ensure the integrity of the whole procedure.
+
+```typescript
+Promise.all([
+      uploadFile2AWS(files),
+      insert2DynamoDB({
+        input_text: textInput,
+        input_file_path: `${BUCKET_NAME}/${files.Key}.txt`,
+      }),
+    ])
+      .then((values) => {
+        toast.success('File has been uploaded!');
+        setFiles({ Key: '', Body: '' });
+        setTextInput('');
+      })
+      .catch((error) => {
+        toast.error('File load error');
+      });
+```
+
+
+
+## Reference: 
+
+https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/getting-started-browser.html
+
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/upload-objects.html
+
+https://stackoverflow.com/questions/17533888/s3-access-control-allow-origin-header
+
+### For API Gateway and Lambda function
+
+Create Lambda function and integrated with API Gateway
+
+https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-dynamo-db.html
+
+https://docs.aws.amazon.com/whitepapers/latest/serverless-multi-tier-architectures-api-gateway-lambda/integration-with-aws-lambda.html
+
+F
+
+https://www.youtube.com/watch?v=lss7T0R019M
+
+https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-generate-sdk-javascript.html
+
+Enable  CORS
+
+https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html
+
+Use them in JavaScript
+
+https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-generate-sdk-javascript.html
+
+### For EC2
+
+Create DynamoDB Stream + Lambda
+
+https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/ec2/command/RunInstancesCommand/
+
+https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/javascript_ec2_code_examples.html
+
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.Lambda.Tutorial.html#Streams.Lambda.Tutorial.LambdaFunction
+
+Encode script in Nodejs
+
+https://stackoverflow.com/questions/6182315/how-can-i-do-base64-encoding-in-node-js
+
+Unable to locate credentials
+
+https://stackoverflow.com/questions/77232752/ec2-instance-iam-role-credentials-in-lambda-function
+
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html
+
+AWS CLi Commend & Shell Script coding 
+
+https://docs.aws.amazon.com/cli/latest/
+
+https://www.runoob.com/linux/linux-shell.html
+
+Auto terminate EC2
+
+https://serverfault.com/questions/942653/why-is-my-ec2-instance-sometimes-not-terminating-when-i-use-shutdown-now
+
+### For CDK
+
+https://docs.aws.amazon.com/zh_cn/lambda/latest/dg/lambda-nodejs.html
+
+https://amazonwebshark.com/category/devops-infrastructure/
+
+https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigatewayv2.HttpApi.html
+
+Upload file to S3
+
+https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html
+
+https://docs.aws.amazon.com/cdk/v2/guide/assets.html#assets_types
